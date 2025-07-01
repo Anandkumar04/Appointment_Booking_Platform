@@ -1,0 +1,208 @@
+.input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* Base styles for light mode */
+html {
+  background-color: #f9fafb;
+}
+
+html.dark {
+  background-color: #111827;
+}
+
+body {
+  background-color: #f9fafb;
+  color: #111827;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
+/* Ensure light mode defaults */
+.bg-gray-50 {
+  background-color: #f9fafb;
+}
+
+.dark .bg-gray-50 {
+  background-color: #111827;
+}
+
+.text-gray-900 {
+  color: #111827;
+}
+
+.dark .text-gray-900 {
+  color: #f9fafb;
+}
+
+/* Animation styles */
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-track {
+  background: #374151;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #6b7280;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Smooth transitions for all elements */
+* {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+/* Force white backgrounds for booking modal */
+.booking-modal-overlay {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.booking-modal-content {
+  background-color: #ffffff !important;
+}
+
+.booking-modal-content * {
+  background-color: inherit;
+}
+
+.booking-modal-content input,
+.booking-modal-content select,
+.booking-modal-content textarea {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+}
+
+.booking-modal-content input:focus,
+.booking-modal-content select:focus,
+.booking-modal-content textarea:focus {
+  background-color: #ffffff !important;
+}
+
+/* Fix z-index issues for form elements */
+.booking-modal-content .form-section {
+  position: relative;
+  z-index: 1;
+}
+
+.booking-modal-content .sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: #ffffff !important;
+}
+
+.booking-modal-content .sticky-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
+  background-color: #ffffff !important;
+}
+
+/* Ensure dropdown options are visible */
+.booking-modal-content select option {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+}
+
+/* Fix for date picker and time selector */
+.booking-modal-content input[type="date"]::-webkit-calendar-picker-indicator {
+  background-color: transparent;
+  color: #6b7280;
+}
+
+.booking-modal-content input[type="date"]::-webkit-inner-spin-button,
+.booking-modal-content input[type="date"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

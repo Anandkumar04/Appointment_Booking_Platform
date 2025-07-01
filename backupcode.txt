@@ -1,0 +1,806 @@
+import React, { useState, useEffect } from 'react';
+import { Calendar, Clock, User, Phone, Mail, MapPin, Star, Check, X, Search, Filter, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
+import axios from 'axios';
+
+const App = () => {
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [currentView, setCurrentView] = useState('home'); // home, booking, profile, admin
+  const [selectedService, setSelectedService] = useState(null);
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedTime, setSelectedTime] = useState('');
+  const [appointments, setAppointments] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentUser, setCurrentUser] = useState(null);
+  const [authForm, setAuthForm] = useState({ name: '', email: '', password: '' });
+
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const res = await fetch('http://localhost:5000/api/appointments');
+        const data = await res.json();
+        setAppointments(data);
+      } catch (err) {
+        console.error('Error fetching appointments:', err);
+      }
+    };
+    fetchAppointments();
+  }, []);
+
+
+  // Sample data
+  const services = [
+    {
+      id: 1,
+      name: 'Hair Styling',
+      provider: 'Sarah Johnson',
+      duration: '60 min',
+      price: '$75',
+      rating: 4.9,
+      image: 'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=400',
+      category: 'Beauty'
+    },
+    {
+      id: 2,
+      name: 'Dental Checkup',
+      provider: 'Dr. Michael Chen',
+      duration: '45 min',
+      price: '$120',
+      rating: 4.8,
+      image: 'https://images.unsplash.com/photo-1606811971618-4486d14f3f99?w=400',
+      category: 'Healthcare'
+    },
+    {
+      id: 3,
+      name: 'Massage Therapy',
+      provider: 'Emma Williams',
+      duration: '90 min',
+      price: '$95',
+      rating: 5.0,
+      image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400',
+      category: 'Wellness'
+    },
+    {
+      id: 4,
+      name: 'Legal Consultation',
+      provider: 'James Rodriguez',
+      duration: '30 min',
+      price: '$200',
+      rating: 4.7,
+      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400',
+      category: 'Professional'
+    }
+  ];
+
+  const timeSlots = ['9:00 AM', '10:00 AM', '11:00 AM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM'];
+
+  const Navigation = () => (
+    <nav className="bg-white shadow-lg border-b border-gray-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          <div className="flex items-center">
+            <div className="flex-shrink-0 flex items-center">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <Calendar className="w-5 h-5 text-white" />
+              </div>
+              <span className="ml-2 text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                BookEasy
+              </span>
+            </div>
+          </div>
+          
+          <div className="hidden md:flex items-center space-x-8">
+            <button
+              onClick={() => setCurrentView('home')}
+              className={`px-3 py-2 rounded-md cursor-pointer text-sm font-medium transition-colors ${
+                currentView === 'home' ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:text-blue-600'
+              }`}
+            >
+              Home
+            </button>
+            <button
+              onClick={() => setCurrentView('booking')}
+              className={`px-3 py-2 rounded-md cursor-pointer text-sm font-medium transition-colors ${
+                currentView === 'booking' ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:text-blue-600'
+              }`}
+            >
+              Book Now
+            </button>
+            <button
+              onClick={() => setCurrentView('profile')}
+              className={`px-3 py-2 rounded-md cursor-pointer text-sm font-medium transition-colors ${
+                currentView === 'profile' ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:text-blue-600'
+              }`}
+            >
+              My Appointments
+            </button>
+          </div>
+
+          <div className="flex items-center space-x-4">
+            <button onClick={() => setShowAuthModal(true)}
+              className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 cursor-pointer rounded-lg font-medium hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105"
+              >
+            Sign In
+          </button>
+
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+
+  const Hero = () => (
+    <div className="relative bg-gradient-to-br from-blue-50 via-white to-purple-50 overflow-hidden">
+      <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div className="text-center">
+          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+            Book Your Perfect
+            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent block">
+              Appointment
+            </span>
+          </h1>
+          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            Connect with top professionals across beauty, healthcare, wellness, and more. 
+            Simple booking, guaranteed quality, unforgettable experiences.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button
+              onClick={() => setCurrentView('booking')}
+              className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-4 cursor-pointer rounded-xl font-semibold text-lg hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg"
+            >
+              Book Appointment
+            </button>
+            <button className="border-2 border-gray-300 text-gray-700 px-8 py-4 cursor-pointer rounded-xl font-semibold text-lg hover:border-blue-500 hover:text-blue-600 transition-all">
+              Explore Services
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const ServiceCard = ({ service, onSelect }) => (
+    <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group">
+      <div className="relative">
+        <img
+          src={service.image}
+          alt={service.name}
+          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+        />
+        <div className="absolute top-4 right-4 bg-white rounded-full px-3 py-1 text-sm font-semibold text-gray-700">
+          {service.category}
+        </div>
+      </div>
+      <div className="p-6">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-xl font-bold text-gray-900">{service.name}</h3>
+          <div className="flex items-center">
+            <Star className="w-4 h-4 text-yellow-400 fill-current" />
+            <span className="text-sm text-gray-600 ml-1">{service.rating}</span>
+          </div>
+        </div>
+        <p className="text-gray-600 mb-3 flex items-center">
+          <User className="w-4 h-4 mr-2" />
+          {service.provider}
+        </p>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center text-gray-500">
+            <Clock className="w-4 h-4 mr-1" />
+            <span className="text-sm">{service.duration}</span>
+          </div>
+          <span className="text-2xl font-bold text-blue-600">{service.price}</span>
+        </div>
+        <button
+          onClick={() => onSelect(service)}
+          className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 cursor-pointer rounded-xl font-semibold hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105"
+        >
+          Book Now
+        </button>
+      </div>
+    </div>
+  );
+
+  const AuthModal = ({ onClose }) => {
+  const [authForm, setAuthForm] = useState({ name: '', email: '', password: '' });
+  const [mode, setMode] = useState('login'); // or 'register'
+
+  const handleChange = (e) => {
+    setAuthForm({ ...authForm, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async () => {
+    const endpoint = mode === 'register' ? 'register' : 'login';
+    try {
+      const res = await axios.post(`http://localhost:5000/api/auth/${endpoint}`, authForm);
+      if (mode === 'login') {
+        localStorage.setItem('token', res.data.token);
+        alert('Logged in successfully!');
+      } else {
+        alert('Registered successfully!');
+      }
+      onClose();
+    } catch (err) {
+      console.error(err);
+      alert('Error during authentication');
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-xl p-6 w-full max-w-md">
+        <h2 className="text-xl font-bold mb-4">{mode === 'login' ? 'Sign In' : 'Register'}</h2>
+        {mode === 'register' && (
+          <input name="name" placeholder="Full Name" value={authForm.name} onChange={handleChange}
+            className="mb-3 w-full p-2 border rounded" />
+        )}
+        <input name="email" placeholder="Email" value={authForm.email} onChange={handleChange}
+          className="mb-3 w-full p-2 border rounded" />
+        <input type="password" name="password" placeholder="Password" value={authForm.password} onChange={handleChange}
+          className="mb-4 w-full p-2 border rounded" />
+        
+        <button onClick={handleSubmit} className="w-full bg-blue-600 text-white py-2 rounded">
+          {mode === 'login' ? 'Sign In' : 'Register'}
+        </button>
+        <p className="mt-4 text-sm text-gray-600 text-center">
+          {mode === 'login' ? "Don't have an account?" : 'Already have an account?'}{' '}
+          <span className="text-blue-600 cursor-pointer" onClick={() => setMode(mode === 'login' ? 'register' : 'login')}>
+            {mode === 'login' ? 'Register' : 'Sign In'}
+          </span>
+        </p>
+      </div>
+    </div>
+  );
+};
+
+
+  const BookingModal = ({ service, onClose, onBook }) => {
+    const [formData, setFormData] = useState({
+      name: '',
+      email: '',
+      phone: '',
+      date: '',
+      time: '',
+      notes: ''
+    });
+
+    // const handleSubmit = () => {
+    //   console.log('Form Data:', formData); 
+    //   if (!formData.name || !formData.email || !formData.phone || !formData.date || !formData.time) {
+    //     alert('Please fill in all required fields');
+    //     return;
+    //   }
+    //   const newAppointment = {
+    //     id: Date.now(),
+    //     service: service.name,
+    //     provider: service.provider,
+    //     ...formData,
+    //     status: 'confirmed',
+    //     price: service.price
+    //   };
+    //   onBook(newAppointment);
+    //   onClose();
+    // };
+  const handleSubmit = async () => {
+  if (!formData.name || !formData.email || !formData.phone || !formData.date || !formData.time) {
+    alert('Please fill in all required fields');
+    return;
+  }
+
+  const newAppointment = {
+    service: service.name,
+    provider: service.provider,
+    ...formData,
+    status: 'confirmed',
+    price: service.price
+  };
+
+  try {
+    const res = await fetch('http://localhost:5000/api/appointments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newAppointment)
+    });
+
+    if (res.ok) {
+      const saved = await res.json();
+      onBook(saved); // optional if you want to update local state
+      onClose();
+    } else {
+      alert('Failed to book appointment');
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Something went wrong');
+    }
+  };
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="bg-white rounded-2xl max-w-2xl w-full max-h-screen overflow-y-auto">
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-gray-900">Book Appointment</h2>
+              <button
+                onClick={onClose}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+          </div>
+          
+          <div className="p-6">
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 mb-6">
+              <h3 className="font-semibold text-gray-900 mb-2">{service.name}</h3>
+              <p className="text-gray-600 flex items-center mb-1">
+                <User className="w-4 h-4 mr-2" />
+                {service.provider}
+              </p>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-500 flex items-center">
+                  <Clock className="w-4 h-4 mr-1" />
+                  {service.duration}
+                </span>
+                <span className="text-xl font-bold text-blue-600">{service.price}</span>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Enter your full name"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                  <input
+                    type="email"
+                    required
+                    value={formData.email}
+                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Enter your email"
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                <input
+                  type="tel"
+                  required
+                  value={formData.phone}
+                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Enter your phone number"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Preferred Date</label>
+                  <input
+                    type="date"
+                    required
+                    value={formData.date}
+                    onChange={(e) => setFormData({...formData, date: e.target.value})}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    min={new Date().toISOString().split('T')[0]}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Preferred Time</label>
+                  <select
+                    required
+                    value={formData.time}
+                    onChange={(e) => setFormData({...formData, time: e.target.value})}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">Select time</option>
+                    {timeSlots.map(time => (
+                      <option key={time} value={time}>{time}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Additional Notes (Optional)</label>
+                <textarea
+                  value={formData.notes}
+                  onChange={(e) => setFormData({...formData, notes: e.target.value})}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  rows="3"
+                  placeholder="Any special requirements or notes..."
+                />
+              </div>
+
+              <div className="flex gap-4 pt-4">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="flex-1 py-3 border cursor-pointer border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  className="flex-1 bg-gradient-to-r cursor-pointer from-blue-500 to-purple-600 text-white py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all"
+                >
+                  Confirm Booking
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const AppointmentCard = ({ appointment, onCancel }) => (
+    <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
+      <div className="flex items-start justify-between">
+        <div className="flex-1">
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">{appointment.service}</h3>
+          <p className="text-gray-600 flex items-center mb-2">
+            <User className="w-4 h-4 mr-2" />
+            {appointment.provider}
+          </p>
+          <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
+            <span className="flex items-center">
+              <Calendar className="w-4 h-4 mr-1" />
+              {appointment.date}
+            </span>
+            <span className="flex items-center">
+              <Clock className="w-4 h-4 mr-1" />
+              {appointment.time}
+            </span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+              appointment.status === 'confirmed' ? 'bg-green-100 text-green-800' :
+              appointment.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+              'bg-red-100 text-red-800'
+            }`}>
+              {appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
+            </span>
+            <span className="text-lg font-bold text-blue-600">{appointment.price}</span>
+          </div>
+        </div>
+        <div className="flex flex-col gap-2 ml-4">
+          <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+            <Mail className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => onCancel(appointment._id)}
+            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const handleBookAppointment = (appointment) => {
+    setAppointments([...appointments, appointment]);
+    setCurrentView('profile');
+  };
+
+  const handleCancelAppointment = async (_id) => {
+  try {
+    const res = await fetch(`http://localhost:5000/api/appointments/${_id}`, {
+      method: 'DELETE'
+    });
+    if (res.ok) {
+      setAppointments(appointments.filter(app => app._id !== _id));
+    } else {
+      alert('Failed to cancel appointment');
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Error while cancelling');
+  }
+};
+
+
+  const filteredServices = services.filter(service =>
+    service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    service.provider.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    service.category.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Navigation />
+      
+      {currentView === 'home' && (
+        <>
+          <Hero />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Services</h2>
+              <p className="text-lg text-gray-600">Discover our most popular professional services</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {services.slice(0, 4).map(service => (
+                <ServiceCard
+                  key={service.id}
+                  service={service}
+                  onSelect={(service) => {
+                    setSelectedService(service);
+                    setCurrentView('booking');
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+
+      {currentView === 'booking' && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">Book Your Appointment</h1>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  placeholder="Search services, providers, or categories..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              <button className="px-6 py-3 border border-gray-300 rounded-lg flex items-center hover:bg-gray-50 transition-colors">
+                <Filter className="w-5 h-5 mr-2" />
+                Filters
+              </button>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredServices.map(service => (
+              <ServiceCard
+                key={service.id}
+                service={service}
+                onSelect={setSelectedService}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {currentView === 'profile' && (
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">My Appointments</h1>
+            <p className="text-gray-600">Manage your upcoming and past appointments</p>
+          </div>
+          
+          {appointments.length === 0 ? (
+            <div className="text-center py-12">
+              <Calendar className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">No appointments yet</h3>
+              <p className="text-gray-500 mb-6">Book your first appointment to get started</p>
+              <button
+                onClick={() => setCurrentView('booking')}
+                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all"
+              >
+                Book Appointment
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {appointments.map(appointment => (
+                <AppointmentCard
+                  key={appointment._id}
+                  appointment={appointment}
+                  onCancel={handleCancelAppointment}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {selectedService && (
+        <BookingModal
+          service={selectedService}
+          onClose={() => setSelectedService(null)}
+          onBook={handleBookAppointment}
+        />
+      )}
+      {showAuthModal && (
+        <AuthModal onClose={() => setShowAuthModal(false)} />
+      )}
+    </div>
+  );
+};
+
+export default App;
+
+
+
+
+
+
+
+
+
+
+
+
+const services = [
+    {
+      id: 1,
+      name: 'Haircut & Styling',
+      provider: 'Mr. Barber',
+      price: '₹300',
+      duration: '30 min',
+      category: 'Beauty',
+      rating: 4.5,
+      image: 'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=400'
+    },
+    {
+      id: 2,
+      name: 'Massage Therapy',
+      provider: 'Relax Spa',
+      price: '₹999',
+      duration: '1 hr',
+      category: 'Wellness',
+      rating: 4.8,
+      image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400'
+    },
+    {
+      id: 3,
+      name: 'Dental Checkup',
+      provider: 'Dr. Smile',
+      price: '₹500',
+      duration: '45 min',
+      category: 'Healthcare',
+      rating: 4.9,
+      image: 'https://images.unsplash.com/photo-1667133295315-820bb6481730?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+    },
+    {
+      id: 4,
+      name: 'Personal Training',
+      provider: 'FitPro Gym',
+      price: '₹800',
+      duration: '1 hr',
+      category: 'Fitness',
+      rating: 4.6,
+      image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop'
+    },
+    {
+      id: 5,
+      name: 'Facial Treatment',
+      provider: 'Glow Spa',
+      price: '₹1200',
+      duration: '1.5 hr',
+      category: 'Beauty',
+      rating: 4.7,
+      image: 'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=400&h=300&fit=crop'
+    },
+    {
+      id: 6,
+      name: 'Eye Examination',
+      provider: 'Vision Care',
+      price: '₹350',
+      duration: '30 min',
+      category: 'Healthcare',
+      rating: 4.4,
+      image: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=400&h=300&fit=crop'
+    }
+  ];
+
+
+
+
+
+
+
+
+  //new items 
+
+  const services = [
+    {
+      id: 1,
+      name: 'Haircut & Styling',
+      provider: 'Mr. Barber',
+      price: '₹300',
+      duration: '30 min',
+      category: 'Beauty',
+      rating: 4.5,
+      image: 'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=400'
+    },
+    {
+      id: 2,
+      name: 'Massage Therapy',
+      provider: 'Relax Spa',
+      price: '₹999',
+      duration: '1 hr',
+      category: 'Wellness',
+      rating: 4.8,
+      image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400'
+    },
+    {
+      id: 3,
+      name: 'Dental Checkup',
+      provider: 'Dr. Smile',
+      price: '₹500',
+      duration: '45 min',
+      category: 'Healthcare',
+      rating: 4.9,
+      image: 'https://images.unsplash.com/photo-1667133295315-820bb6481730?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+    },
+    {
+      id: 4,
+      name: 'Personal Training',
+      provider: 'FitPro Gym',
+      price: '₹800',
+      duration: '1 hr',
+      category: 'Fitness',
+      rating: 4.6,
+      image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop'
+    },
+    {
+      id: 5,
+      name: 'Facial Treatment',
+      provider: 'Glow Spa',
+      price: '₹1200',
+      duration: '1.5 hr',
+      category: 'Beauty',
+      rating: 4.7,
+      image: 'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=400&h=300&fit=crop'
+    },
+    {
+      id: 6,
+      name: 'Eye Examination',
+      provider: 'Vision Care',
+      price: '₹350',
+      duration: '30 min',
+      category: 'Healthcare',
+      rating: 4.4,
+      image: 'https://plus.unsplash.com/premium_photo-1663013256145-e4b58bb427f0?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+    },
+    {
+      id: 7,
+      name: 'Yoga Classes',
+      provider: 'Zen Studio',
+      price: '₹600',
+      duration: '1.5 hr',
+      category: 'Fitness',
+      rating: 4.8,
+      image: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+    },
+    {
+      id: 8,
+      name: 'Car Service',
+      provider: 'AutoCare Pro',
+      price: '₹2500',
+      duration: '3 hr',
+      category: 'Professional',
+      rating: 4.5,
+      image: 'https://plus.unsplash.com/premium_photo-1663090140645-32b7d760853e?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+    },
+    {
+      id: 9,
+      name: 'Photography Session',
+      provider: 'Capture Moments',
+      price: '₹3000',
+      duration: '2 hr',
+      category: 'Professional',
+      rating: 4.9,
+      image: 'https://plus.unsplash.com/premium_photo-1663054300534-3be5c4c61ae3?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+    }
+  ];
