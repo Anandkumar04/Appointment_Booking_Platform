@@ -94,3 +94,15 @@ GitHub: @Anandkumar04
 📃 License
 This project is licensed under the MIT License.
 
+
+
+
+![Screenshot 2025-07-02 151359](https://github.com/user-attachments/assets/c795e9c7-dfdb-4acc-a319-995dd0295be6)
+
+
+![Screenshot 2025-07-02 151552](https://github.com/user-attachments/assets/11bade52-afca-4d4c-8aea-6126b308939b)
+
+
+![Screenshot 2025-07-02 151613](https://github.com/user-attachments/assets/f486d170-a15c-496b-a082-9051cb858707)
+
+
