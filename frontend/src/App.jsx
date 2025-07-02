@@ -148,7 +148,7 @@ const App = () => {
   // Check if backend is available
   const isBackendAvailable = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/health', {
+      const response = await fetch(`${API_BASE_URL}/api/appointments`, {
         method: 'GET',
         timeout: 5000
       });
@@ -188,7 +188,7 @@ const App = () => {
     }
 
     try {
-      const res = await fetch('http://localhost:5000/api/appointments');
+      const res = await fetch(`${API_BASE_URL}/api/appointments`);
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
@@ -255,7 +255,7 @@ const App = () => {
       const backendAvailable = await isBackendAvailable();
       
       if (backendAvailable) {
-        const res = await fetch(`http://localhost:5000/api/appointments/${id}`, { 
+        const res = await fetch(`${API_BASE_URL}/api/appointments/${id}`, { 
           method: 'DELETE' 
         });
         
