@@ -6,6 +6,8 @@ import Booking from './pages/Booking';
 import Profile from './pages/Profile';
 import BookingModal from './components/BookingModal';
 import AuthModal from './components/AuthModal';
+import { API_BASE_URL } from './utils/api';
+
 
 // Navigation wrapper to access location
 const NavigationWrapper = ({ showAuthModal, setShowAuthModal, user, onSignOut }) => {
