@@ -4,7 +4,7 @@ const API_CONFIG = {
     timeout: 10000
   },
   production: {
-    baseURL: 'https://your-app-name.onrender.com', // Replace with your actual Render URL
+    baseURL: 'https://book-easy-1270.onrender.com', // Replace with your actual Render URL
     timeout: 30000 // Render can take longer to wake up from sleep
   }
 };
