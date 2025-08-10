@@ -5,13 +5,6 @@ BookEasy is a modern, full-stack MERN web application for scheduling appointment
 
 ---
 
-## 🚀 Live Demo
-
-- **Frontend:** [book-easy-nine.vercel.app](https://book-easy-nine.vercel.app/)
-- **Backend:** [book-easy-1270.onrender.com](https://book-easy-1270.onrender.com)
-
----
-
 ## 🛠️ Features
 
 - 👤 **User Registration & Login**  
