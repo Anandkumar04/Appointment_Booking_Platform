@@ -17,7 +17,7 @@ const ServiceCard = ({ service, onSelect }) => {
       </div>
       
       <div className="p-6">
-        <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+        <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-[#2D6A4F] transition-colors">
           {service.name}
         </h3>
         

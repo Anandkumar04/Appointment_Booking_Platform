@@ -37,20 +37,20 @@ const ContactSupportModal = ({ onClose }) => {
 
   if (isSubmitted) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full text-center">
-          <div className="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-green-600 dark:text-green-400 text-2xl">✓</span>
+      <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
+        <div className="bg-white rounded-2xl p-8 max-w-md w-full text-center shadow-xl">
+          <div className="w-16 h-16 bg-[#D8F3DC] rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-[#1F5A3E] text-2xl">✓</span>
           </div>
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">
             Message Sent Successfully!
           </h3>
-          <p className="text-gray-600 dark:text-gray-300 mb-4">
+          <p className="text-gray-600 mb-6">
             We'll get back to you within 24 hours.
           </p>
           <button
             onClick={onClose}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            className="bg-[#2D6A4F] text-white px-6 py-2.5 rounded-xl hover:bg-[#1F5A3E] transition-colors font-medium cursor-pointer"
           >
             Close
           </button>
@@ -60,34 +60,34 @@ const ContactSupportModal = ({ onClose }) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-2xl max-w-2xl w-full max-h-screen overflow-y-auto">
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-screen overflow-y-auto shadow-2xl">
         {/* Header */}
-        <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Contact Support</h2>
-          <button onClick={onClose} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
-            <X className="w-6 h-6 text-gray-500 dark:text-gray-400" />
+        <div className="p-6 border-b border-gray-100 flex justify-between items-center">
+          <h2 className="text-2xl font-bold text-gray-900">Contact Support</h2>
+          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors cursor-pointer">
+            <X className="w-5 h-5 text-gray-500" />
           </button>
         </div>
 
         {/* Tabs */}
-        <div className="flex border-b border-gray-200 dark:border-gray-700">
+        <div className="flex border-b border-gray-100">
           <button
             onClick={() => setActiveTab('contact')}
-            className={`flex-1 py-3 px-4 text-sm font-medium transition-colors ${
+            className={`flex-1 py-3.5 px-4 text-sm font-semibold transition-colors cursor-pointer ${
               activeTab === 'contact'
-                ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                ? 'text-[#2D6A4F] border-b-2 border-[#2D6A4F] bg-[#D8F3DC]/20'
+                : 'text-gray-500 hover:text-gray-700'
             }`}
           >
             Contact Info
           </button>
           <button
             onClick={() => setActiveTab('message')}
-            className={`flex-1 py-3 px-4 text-sm font-medium transition-colors ${
+            className={`flex-1 py-3.5 px-4 text-sm font-semibold transition-colors cursor-pointer ${
               activeTab === 'message'
-                ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                ? 'text-[#2D6A4F] border-b-2 border-[#2D6A4F] bg-[#D8F3DC]/20'
+                : 'text-gray-500 hover:text-gray-700'
             }`}
           >
             Send Message
@@ -98,49 +98,49 @@ const ContactSupportModal = ({ onClose }) => {
           {activeTab === 'contact' ? (
             <div className="space-y-6">
               <div className="text-center mb-6">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg font-bold text-gray-900 mb-1">
                   We're here to help!
                 </h3>
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className="text-gray-600 text-sm">
                   Get in touch with our support team through any of these channels
                 </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 text-center">
-                  <Mail className="w-8 h-8 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Email</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">support@bookeasy.com</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Response within 24 hours</p>
+                <div className="bg-[#F8FAF8] rounded-xl p-4 text-center border border-emerald-100/60">
+                  <Mail className="w-7 h-7 text-[#2D6A4F] mx-auto mb-2" />
+                  <h4 className="font-semibold text-gray-900 mb-1">Email</h4>
+                  <p className="text-sm text-gray-600">support@bookeasy.com</p>
+                  <p className="text-xs text-gray-500 mt-1">Response within 24 hours</p>
                 </div>
 
-                <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 text-center">
-                  <Phone className="w-8 h-8 text-green-600 dark:text-green-400 mx-auto mb-2" />
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Phone</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">+91 9876543210</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Mon-Fri, 9 AM - 9 PM</p>
+                <div className="bg-[#F8FAF8] rounded-xl p-4 text-center border border-emerald-100/60">
+                  <Phone className="w-7 h-7 text-[#2D6A4F] mx-auto mb-2" />
+                  <h4 className="font-semibold text-gray-900 mb-1">Phone</h4>
+                  <p className="text-sm text-gray-600">+91 9876543210</p>
+                  <p className="text-xs text-gray-500 mt-1">Mon-Fri, 9 AM - 9 PM</p>
                 </div>
 
-                <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 text-center">
-                  <MessageCircle className="w-8 h-8 text-purple-600 dark:text-purple-400 mx-auto mb-2" />
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Live Chat</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">Available 24/7</p>
-                  <button className="text-xs text-blue-600 dark:text-blue-400 hover:underline mt-1">
+                <div className="bg-[#F8FAF8] rounded-xl p-4 text-center border border-emerald-100/60">
+                  <MessageCircle className="w-7 h-7 text-[#2D6A4F] mx-auto mb-2" />
+                  <h4 className="font-semibold text-gray-900 mb-1">Live Chat</h4>
+                  <p className="text-sm text-gray-600">Available 24/7</p>
+                  <button className="text-xs text-[#2D6A4F] font-semibold hover:underline mt-1 cursor-pointer">
                     Start Chat
                   </button>
                 </div>
 
-                <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 text-center">
-                  <MapPin className="w-8 h-8 text-red-600 dark:text-red-400 mx-auto mb-2" />
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Office</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">Bangalore, India</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Visit by appointment</p>
+                <div className="bg-[#F8FAF8] rounded-xl p-4 text-center border border-emerald-100/60">
+                  <MapPin className="w-7 h-7 text-[#2D6A4F] mx-auto mb-2" />
+                  <h4 className="font-semibold text-gray-900 mb-1">Office</h4>
+                  <p className="text-sm text-gray-600">Bangalore, India</p>
+                  <p className="text-xs text-gray-500 mt-1">Visit by appointment</p>
                 </div>
               </div>
 
-              <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-4">
-                <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">Quick Help</h4>
-                <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
+              <div className="bg-[#D8F3DC]/40 rounded-xl p-4 border border-[#74C69D]/40">
+                <h4 className="font-semibold text-[#1F5A3E] mb-2">Quick Help</h4>
+                <ul className="text-sm text-[#2D6A4F] space-y-1">
                   <li>• Check our FAQ section for common questions</li>
                   <li>• Use live chat for immediate assistance</li>
                   <li>• Email us for detailed technical support</li>
@@ -152,7 +152,7 @@ const ContactSupportModal = ({ onClose }) => {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Your Name
                   </label>
                   <input
@@ -161,12 +161,12 @@ const ContactSupportModal = ({ onClose }) => {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D6A4F] focus:border-[#2D6A4F] bg-white text-gray-900"
                     placeholder="Enter your name"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Email Address
                   </label>
                   <input
@@ -175,14 +175,14 @@ const ContactSupportModal = ({ onClose }) => {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D6A4F] focus:border-[#2D6A4F] bg-white text-gray-900"
                     placeholder="Enter your email"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Subject
                 </label>
                 <input
@@ -191,13 +191,13 @@ const ContactSupportModal = ({ onClose }) => {
                   value={formData.subject}
                   onChange={handleChange}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D6A4F] focus:border-[#2D6A4F] bg-white text-gray-900"
                   placeholder="What can we help you with?"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Message
                 </label>
                 <textarea
@@ -206,7 +206,7 @@ const ContactSupportModal = ({ onClose }) => {
                   onChange={handleChange}
                   required
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D6A4F] focus:border-[#2D6A4F] bg-white text-gray-900"
                   placeholder="Describe your issue or question in detail..."
                 />
               </div>
@@ -214,7 +214,7 @@ const ContactSupportModal = ({ onClose }) => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center transition-colors"
+                className="w-full bg-[#2D6A4F] text-white py-3 rounded-xl font-semibold hover:bg-[#1F5A3E] disabled:opacity-50 flex items-center justify-center transition-colors cursor-pointer shadow-sm"
               >
                 {isSubmitting ? (
                   <>

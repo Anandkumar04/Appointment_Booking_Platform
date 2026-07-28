@@ -39,7 +39,7 @@ const AuthModal = ({ onClose, onSuccess }) => {
 
   const isBackendAvailable = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/health', {
+      const response = await fetch('/api/health', {
         method: 'GET',
         timeout: 3000
       });
@@ -61,7 +61,7 @@ const AuthModal = ({ onClose, onSuccess }) => {
       if (backendAvailable) {
         // Try real backend
         const endpoint = mode === 'register' ? 'register' : 'login';
-        const response = await fetch(`http://localhost:5000/api/auth/${endpoint}`, {
+        const response = await fetch(`/api/auth/${endpoint}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(authForm)
@@ -114,15 +114,8 @@ const AuthModal = ({ onClose, onSuccess }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center z-50 p-4">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-20 left-20 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
-        <div className="absolute top-40 right-20 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-40 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
-      </div>
-
-      <div className="relative bg-white/80 backdrop-blur-lg rounded-2xl p-8 w-full max-w-md shadow-2xl border border-white/20">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="relative bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl border border-gray-100">
         {/* Back Button */}
         <button 
           onClick={onClose} 
@@ -133,7 +126,7 @@ const AuthModal = ({ onClose, onSuccess }) => {
         </button>
 
         <div className="text-center mb-6">
-          <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-[#2D6A4F] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
             <span className="text-white text-2xl font-bold">
               {mode === 'login' ? '👋' : '🎉'}
             </span>
@@ -150,7 +143,7 @@ const AuthModal = ({ onClose, onSuccess }) => {
         </div>
         
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-4">
+          <div className="bg-rose-50 border border-rose-200 text-rose-700 px-4 py-3 rounded-lg mb-4 text-sm font-medium">
             {error}
           </div>
         )}
@@ -164,7 +157,7 @@ const AuthModal = ({ onClose, onSuccess }) => {
                 placeholder="Enter your full name" 
                 value={authForm.name} 
                 onChange={handleChange} 
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-colors"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D6A4F] focus:border-[#2D6A4F] focus:outline-none transition-colors"
                 disabled={loading}
               />
             </div>
@@ -178,7 +171,7 @@ const AuthModal = ({ onClose, onSuccess }) => {
               placeholder="Enter your email" 
               value={authForm.email} 
               onChange={handleChange} 
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-colors"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D6A4F] focus:border-[#2D6A4F] focus:outline-none transition-colors"
               disabled={loading}
             />
           </div>
@@ -191,7 +184,7 @@ const AuthModal = ({ onClose, onSuccess }) => {
               placeholder="Enter your password" 
               value={authForm.password} 
               onChange={handleChange} 
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-colors"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D6A4F] focus:border-[#2D6A4F] focus:outline-none transition-colors"
               disabled={loading}
             />
             {mode === 'register' && (
@@ -203,7 +196,7 @@ const AuthModal = ({ onClose, onSuccess }) => {
         <button 
           onClick={handleSubmit} 
           disabled={loading}
-          className="w-full mt-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105 disabled:opacity-50 disabled:transform-none shadow-lg"
+          className="w-full mt-6 bg-[#2D6A4F] text-white py-3.5 rounded-xl font-semibold hover:bg-[#1F5A3E] transition-all disabled:opacity-50 shadow-sm cursor-pointer"
         >
           {loading ? (
             <div className="flex items-center justify-center">
@@ -218,7 +211,7 @@ const AuthModal = ({ onClose, onSuccess }) => {
         <p className="mt-6 text-sm text-center text-gray-600">
           {mode === 'login' ? "Don't have an account?" : 'Already have an account?'}{' '}
           <button 
-            className="text-blue-600 font-semibold hover:text-blue-700 hover:underline" 
+            className="text-[#2D6A4F] font-semibold hover:underline cursor-pointer" 
             onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
             disabled={loading}
           >
