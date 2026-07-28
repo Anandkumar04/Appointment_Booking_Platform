@@ -25,7 +25,7 @@ const Booking = ({ services, onSelect, isLoading }) => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#2D6A4F]"></div>
       </div>
     );
   }
@@ -33,13 +33,13 @@ const Booking = ({ services, onSelect, isLoading }) => {
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#ffffff' }}>
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-blue-50 via-white to-purple-50 py-16">
+      <div className="bg-[#F8FAF8] border-b border-emerald-100/60 py-14">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight mb-3">
               Book Your Appointment
             </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Choose from our wide range of professional services and book with trusted providers
             </p>
           </div>
@@ -50,12 +50,12 @@ const Booking = ({ services, onSelect, isLoading }) => {
       <div className="bg-white min-h-screen">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Search and Filter Section */}
-          <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 p-8 mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">Find Your Perfect Service</h2>
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 md:p-8 mb-8">
+            <h2 className="text-xl font-bold text-gray-900 mb-6">Find Your Perfect Service</h2>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Search Input */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Search Services
                 </label>
                 <div className="relative">
@@ -65,14 +65,14 @@ const Booking = ({ services, onSelect, isLoading }) => {
                     placeholder="Search services or providers..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-12 pr-4 py-4 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500 transition-all duration-200 text-base"
+                    className="w-full pl-12 pr-4 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D6A4F] focus:border-[#2D6A4F] bg-white text-gray-900 placeholder-gray-400 transition-all text-base"
                   />
                 </div>
               </div>
 
               {/* Category Filter */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Category
                 </label>
                 <div className="relative">
@@ -80,7 +80,7 @@ const Booking = ({ services, onSelect, isLoading }) => {
                   <select
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="w-full pl-12 pr-10 py-4 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 appearance-none cursor-pointer transition-all duration-200 text-base"
+                    className="w-full pl-12 pr-10 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D6A4F] focus:border-[#2D6A4F] bg-white text-gray-900 appearance-none cursor-pointer transition-all text-base"
                   >
                     {categories.map(category => (
                       <option key={category} value={category}>
@@ -98,14 +98,14 @@ const Booking = ({ services, onSelect, isLoading }) => {
 
               {/* Sort Options */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Sort By
                 </label>
                 <div className="relative">
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 appearance-none cursor-pointer transition-all duration-200 text-base"
+                    className="w-full px-4 py-3.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#2D6A4F] focus:border-[#2D6A4F] bg-white text-gray-900 appearance-none cursor-pointer transition-all text-base"
                   >
                     <option value="rating">Highest Rating</option>
                     <option value="price">Price: Low to High</option>
@@ -124,17 +124,17 @@ const Booking = ({ services, onSelect, isLoading }) => {
           {/* Results Summary */}
           <div className="flex justify-between items-center mb-8">
             <div>
-              <p className="text-gray-700 text-lg">
+              <p className="text-gray-700 text-base">
                 <span className="font-bold text-gray-900">{filteredServices.length}</span> service{filteredServices.length !== 1 ? 's' : ''} available
                 {selectedCategory !== 'all' && (
-                  <span className="text-blue-600 font-semibold"> in {selectedCategory}</span>
+                  <span className="text-[#2D6A4F] font-semibold"> in {selectedCategory}</span>
                 )}
               </p>
             </div>
             {searchTerm && (
               <button
                 onClick={() => setSearchTerm('')}
-                className="text-blue-600 hover:text-blue-800 font-medium bg-blue-50 px-4 py-2 rounded-lg hover:bg-blue-100 transition-colors"
+                className="text-[#2D6A4F] font-medium bg-[#D8F3DC]/50 px-4 py-2 rounded-lg hover:bg-[#D8F3DC] transition-colors cursor-pointer"
               >
                 Clear search
               </button>
@@ -143,14 +143,14 @@ const Booking = ({ services, onSelect, isLoading }) => {
 
           {/* Services Grid */}
           {filteredServices.length === 0 ? (
-            <div className="text-center py-20 bg-white">
-              <div className="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-8">
-                <div className="text-gray-400 text-6xl">🔍</div>
+            <div className="text-center py-20 bg-white border border-gray-100 rounded-2xl">
+              <div className="w-24 h-24 bg-[#D8F3DC]/40 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="text-gray-400 text-4xl">🔍</div>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
                 No services found
               </h3>
-              <p className="text-gray-600 mb-8 text-lg max-w-md mx-auto">
+              <p className="text-gray-600 mb-8 text-base max-w-md mx-auto">
                 Try adjusting your search terms or filters to find what you're looking for.
               </p>
               <button
@@ -158,13 +158,13 @@ const Booking = ({ services, onSelect, isLoading }) => {
                   setSearchTerm('');
                   setSelectedCategory('all');
                 }}
-                className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+                className="bg-[#2D6A4F] text-white px-8 py-3 rounded-xl hover:bg-[#1F5A3E] transition-colors font-semibold cursor-pointer shadow-sm"
               >
                 Show All Services
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 bg-white">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 bg-white">
               {filteredServices.map(service => (
                 <ServiceCard
                   key={service.id}

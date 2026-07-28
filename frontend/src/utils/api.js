@@ -1,17 +1,9 @@
-const API_CONFIG = {
-  development: {
-    baseURL: 'http://localhost:5000',
-    timeout: 10000
-  },
-  production: {
-    baseURL: 'https://book-easy-1270.onrender.com', // Replace with your actual Render URL
-    timeout: 30000 // Render can take longer to wake up from sleep
-  }
-};
+export const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-const environment = process.env.NODE_ENV || 'development';
-export const API_BASE_URL = API_CONFIG[environment].baseURL;
-export const API_TIMEOUT = API_CONFIG[environment].timeout;
+export const API_TIMEOUT = 10000;
+
+const environment = import.meta.env.MODE;
 
 // Helper function to handle Render's cold start
 const waitForRenderWakeup = async (url, maxRetries = 3) => {

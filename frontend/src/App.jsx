@@ -168,24 +168,20 @@ const App = () => {
     const backendAvailable = await isBackendAvailable();
     
     if (!backendAvailable) {
-      console.log('Backend not available, using mock data');
-      // Use mock data when backend is not available
-      setTimeout(() => {
-        setAppointments([
-          {
-            _id: '1',
-            service: 'Haircut & Styling',
-            provider: 'Mr. Barber',
-            date: '2025-07-05',
-            time: '10:00 AM',
-            status: 'confirmed',
-            name: 'John Doe',
-            email: 'john@example.com',
-            phone: '9876543210'
-          }
-        ]);
-        setIsLoading(false);
-      }, 1000);
+      setAppointments([
+        {
+          _id: '1',
+          service: 'Haircut & Styling',
+          provider: 'Mr. Barber',
+          date: '2025-07-05',
+          time: '10:00 AM',
+          status: 'confirmed',
+          name: 'Anandkumar04',
+          email: 'anandkumar04@example.com',
+          phone: '+91 9876543210'
+        }
+      ]);
+      setIsLoading(false);
       return;
     }
 
@@ -196,22 +192,31 @@ const App = () => {
       }
       const data = await res.json();
       setAppointments(data);
+      localStorage.setItem('cached_appointments', JSON.stringify(data));
     } catch (err) {
       console.error('Error fetching appointments:', err);
-      // Use mock data as fallback
-      setAppointments([
-        {
-          _id: '1',
-          service: 'Haircut & Styling',
-          provider: 'Mr. Barber',
-          date: '2025-07-05',
-          time: '10:00 AM',
-          status: 'confirmed',
-          name: 'John Doe',
-          email: 'john@example.com',
-          phone: '9876543210'
+      const cached = localStorage.getItem('cached_appointments');
+      if (cached) {
+        try {
+          setAppointments(JSON.parse(cached));
+        } catch {
+          /* ignore */
         }
-      ]);
+      } else {
+        setAppointments([
+          {
+            _id: '1',
+            service: 'Haircut & Styling',
+            provider: 'Mr. Barber',
+            date: '2025-07-05',
+            time: '10:00 AM',
+            status: 'confirmed',
+            name: 'Anandkumar04',
+            email: 'anandkumar04@example.com',
+            phone: '+91 9876543210'
+          }
+        ]);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -220,19 +225,32 @@ const App = () => {
   useEffect(() => {
     fetchAppointments();
     
-    // Check for existing auth token and user data
+    // Check for existing auth token and verify with backend
     const token = localStorage.getItem('token');
     const savedUser = localStorage.getItem('user');
     
-    if (token && savedUser) {
-      try {
-        const userData = JSON.parse(savedUser);
-        setUser(userData);
-      } catch (err) {
-        console.error('Error parsing user data:', err);
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+    if (token) {
+      if (savedUser) {
+        try {
+          setUser(JSON.parse(savedUser));
+        } catch {
+          /* ignore */
+        }
       }
+      // Validate session with backend /api/auth/me
+      fetch(`${API_BASE_URL}/api/auth/me`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+        .then(res => res.ok ? res.json() : Promise.reject())
+        .then(data => {
+          if (data.user) {
+            setUser(data.user);
+            localStorage.setItem('user', JSON.stringify(data.user));
+          }
+        })
+        .catch(() => {
+          // Token invalid or backend offline, keep local user state if valid
+        });
     }
   }, []);
 
@@ -362,6 +380,8 @@ const App = () => {
         {showBookingModal && selectedService && (
           <BookingModal
             service={selectedService}
+            user={user}
+            existingAppointments={appointments}
             onClose={() => {
               setShowBookingModal(false);
               setSelectedService(null);
