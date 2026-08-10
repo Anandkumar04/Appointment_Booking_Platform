@@ -2,20 +2,33 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const Appointment = require('../models/Appointment');
-
-const inMemoryAppointments = [
+let inMemoryAppointments = [
   {
     _id: '1',
     service: 'Haircut & Styling',
     provider: 'Mr. Barber',
     date: '2025-07-05',
     time: '10:00 AM',
+    price: '₹300',
     status: 'confirmed',
+    paymentStatus: 'paid',
+    paymentMethod: 'stripe',
+    transactionId: 'cs_test_1',
+    paidAmount: '₹300',
     name: 'Anandkumar04',
     email: 'anandkumar04@example.com',
     phone: '+91 9876543210'
   }
 ];
+
+try {
+  const store = require('../store/inMemoryStore');
+  if (store && store.inMemoryAppointments) {
+    inMemoryAppointments = store.inMemoryAppointments;
+  }
+} catch (e) {
+  // Safe fallback if inMemoryStore.js is missing
+}
 
 // GET booked time slots for a provider and date
 router.get('/booked-slots', async (req, res) => {

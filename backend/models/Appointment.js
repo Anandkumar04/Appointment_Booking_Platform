@@ -10,7 +10,11 @@ const appointmentSchema = new mongoose.Schema({
   service: String,
   provider: String,
   price: String,
-  status: String
+  status: String,
+  paymentStatus: { type: String, default: 'unpaid' },
+  paymentMethod: String,
+  transactionId: String,
+  paidAmount: String
 }, { timestamps: true });
 
 module.exports = mongoose.model('Appointment', appointmentSchema);

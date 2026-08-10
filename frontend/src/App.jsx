@@ -4,6 +4,8 @@ import Navigation from './components/Navigation';
 import Home from './pages/Home';
 import Booking from './pages/Booking';
 import Profile from './pages/Profile';
+import PaymentSuccess from './pages/PaymentSuccess';
+import PaymentCancel from './pages/PaymentCancel';
 import BookingModal from './components/BookingModal';
 import AuthModal from './components/AuthModal';
 import { API_BASE_URL } from './utils/api';
@@ -252,6 +254,64 @@ const App = () => {
           // Token invalid or backend offline, keep local user state if valid
         });
     }
+
+    // Handle return from Stripe Checkout
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('stripe_success') === 'true') {
+      const service = params.get('service');
+      const provider = params.get('provider');
+      const price = params.get('price');
+      const date = params.get('date');
+      const time = params.get('time');
+      const name = params.get('name');
+      const email = params.get('email');
+      const phone = params.get('phone');
+      const notes = params.get('notes') || '';
+      const sessionId = params.get('session_id') || `cs_stripe_${Date.now()}`;
+
+      if (service && date && time) {
+        const appointmentPayload = {
+          service,
+          provider,
+          price,
+          date,
+          time,
+          name: name || 'Customer',
+          email: email || '',
+          phone: phone || '',
+          notes,
+          status: 'confirmed',
+          paymentStatus: 'paid',
+          paymentMethod: 'Stripe Checkout',
+          transactionId: sessionId,
+          paidAmount: price
+        };
+
+        fetch(`${API_BASE_URL}/api/appointments`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(localStorage.getItem('token') ? { 'Authorization': `Bearer ${localStorage.getItem('token')}` } : {})
+          },
+          body: JSON.stringify(appointmentPayload)
+        })
+          .then(res => res.ok ? res.json() : Promise.reject())
+          .then(savedApp => {
+            setAppointments(prev => [...prev, savedApp]);
+          })
+          .catch(() => {
+            const fallbackApp = {
+              _id: Date.now().toString(),
+              ...appointmentPayload,
+              createdAt: new Date().toISOString()
+            };
+            setAppointments(prev => [...prev, fallbackApp]);
+          })
+          .finally(() => {
+            window.history.replaceState({}, document.title, window.location.pathname);
+          });
+      }
+    }
   }, []);
 
   const handleBookNow = (service) => {
@@ -373,6 +433,18 @@ const App = () => {
                 isLoading={isLoading}
               />
             } 
+          />
+          <Route 
+            path="/payment-success" 
+            element={
+              <PaymentSuccess 
+                fetchAppointments={fetchAppointments} 
+              />
+            } 
+          />
+          <Route 
+            path="/payment-cancel" 
+            element={<PaymentCancel />} 
           />
         </Routes>
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Calendar, Clock, User, Phone, Mail, MessageSquare } from 'lucide-react';
+import { X, Calendar, Clock, User, Phone, Mail, MessageSquare, CreditCard, Lock } from 'lucide-react';
 import { API_BASE_URL } from '../utils/api';
 
 const BookingModal = ({ service, onClose, onBook, user, existingAppointments = [] }) => {
@@ -12,6 +12,7 @@ const BookingModal = ({ service, onClose, onBook, user, existingAppointments = [
     notes: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [checkoutUrl, setCheckoutUrl] = useState('');
   const [errors, setErrors] = useState({});
   const [bookedSlots, setBookedSlots] = useState([]);
   const [apiError, setApiError] = useState('');
@@ -114,46 +115,52 @@ const BookingModal = ({ service, onClose, onBook, user, existingAppointments = [
     if (!validateForm()) return;
 
     setIsSubmitting(true);
-    
-    const appointmentPayload = {
+
+    const payload = {
       service: service.name,
       provider: service.provider,
       price: service.price,
-      ...formData,
-      status: 'confirmed'
+      date: formData.date,
+      time: formData.time,
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      notes: formData.notes,
+      returnUrl: window.location.origin
     };
 
     try {
-      const res = await fetch(`${API_BASE_URL}/api/appointments`, {
+      const endpoint = API_BASE_URL ? `${API_BASE_URL}/api/payments/create-checkout-session` : '/api/payments/create-checkout-session';
+      const res = await fetch(endpoint, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(localStorage.getItem('token') ? { 'Authorization': `Bearer ${localStorage.getItem('token')}` } : {})
-        },
-        body: JSON.stringify(appointmentPayload)
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
       });
 
+      const data = await res.json().catch(() => ({}));
+
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || `Server responded with status ${res.status}`);
+        throw new Error(data.error || `Server responded with status ${res.status}`);
       }
 
-      const savedAppointment = await res.json();
-      onBook(savedAppointment);
-    } catch (error) {
-      console.warn('Backend booking error or offline, completing with client fallback:', error.message);
-      if (error.message.includes('already booked')) {
-        setApiError(error.message);
+      if (data.url) {
+        setCheckoutUrl(data.url);
+        // Open Stripe Checkout in top frame or new window to bypass iframe restriction
+        try {
+          if (window.top && window.top !== window) {
+            window.top.location.href = data.url;
+          } else {
+            window.location.href = data.url;
+          }
+        } catch {
+          window.open(data.url, '_blank');
+        }
       } else {
-        // Fallback local booking
-        const fallbackApp = {
-          _id: Date.now().toString(),
-          ...appointmentPayload,
-          createdAt: new Date().toISOString()
-        };
-        onBook(fallbackApp);
+        throw new Error('No checkout URL returned from server');
       }
-    } finally {
+    } catch (error) {
+      console.error('Stripe redirect error:', error);
+      setApiError(error.message || 'Failed to initiate Stripe Checkout session.');
       setIsSubmitting(false);
     }
   };
@@ -416,30 +423,50 @@ const BookingModal = ({ service, onClose, onBook, user, existingAppointments = [
         <div 
           className="bg-white border-t border-gray-100 p-6 rounded-b-2xl flex-shrink-0 sticky bottom-0 z-10"
         >
-          <div className="flex gap-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 cursor-pointer px-6 py-3.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all font-semibold text-base"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              onClick={handleSubmit}
-              className="flex-1 cursor-pointer px-6 py-3.5 bg-[#2D6A4F] text-white rounded-xl hover:bg-[#1F5A3E] disabled:opacity-50 disabled:cursor-not-allowed transition-all font-semibold text-base shadow-sm"
-            >
-              {isSubmitting ? (
-                <div className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
-                  Processing...
-                </div>
-              ) : (
-                `Confirm Booking - ${service.price}`
-              )}
-            </button>
-          </div>
+          {checkoutUrl ? (
+            <div className="space-y-3 text-center">
+              <a
+                href={checkoutUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full cursor-pointer px-6 py-3.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-all font-semibold text-base shadow-md flex items-center justify-center gap-2 block"
+              >
+                <CreditCard className="w-5 h-5" />
+                <span>Open Stripe Checkout Page</span>
+              </a>
+              <p className="text-xs text-gray-500">
+                If the payment page didn't open automatically, click the button above to complete your booking on Stripe.
+              </p>
+            </div>
+          ) : (
+            <div className="flex gap-4">
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-1 cursor-pointer px-6 py-3.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all font-semibold text-base"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                onClick={handleSubmit}
+                className="flex-1 cursor-pointer px-6 py-3.5 bg-[#2D6A4F] text-white rounded-xl hover:bg-[#1F5A3E] disabled:opacity-50 disabled:cursor-not-allowed transition-all font-semibold text-base shadow-sm flex items-center justify-center gap-2"
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                    Generating Payment Session...
+                  </div>
+                ) : (
+                  <>
+                    <CreditCard className="w-5 h-5 text-emerald-200" />
+                    <span>Confirm Booking - {service.price}</span>
+                  </>
+                )}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

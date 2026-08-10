@@ -8,13 +8,19 @@ dotenv.config();
 
 const authRoutes = require('./backend/routes/authRoutes');
 const appointmentRoutes = require('./backend/routes/appointments');
+const paymentRoutes = require('./backend/routes/paymentRoutes');
 
 async function startServer() {
   const app = express();
   const PORT = process.env.PORT || 3000;
 
-  app.use(express.json());
   app.use(cors());
+
+  // Payment routes mounted before global express.json to allow raw body parsing in /api/payments/webhook
+  app.use('/api/payments', paymentRoutes);
+
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
   // Connect to MongoDB if MONGO_URI is set
   mongoose.set('bufferCommands', false);
