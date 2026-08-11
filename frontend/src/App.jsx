@@ -4,7 +4,7 @@ import Navigation from './components/Navigation';
 import Home from './pages/Home';
 import Booking from './pages/Booking';
 import Profile from './pages/Profile';
-import PaymentSuccess from './pages/PaymentSuccess';
+import PaymentSuccess from './pages/paymentSuccess';
 import PaymentCancel from './pages/paymentCancel';
 import BookingModal from './components/BookingModal';
 import AuthModal from './components/AuthModal';
