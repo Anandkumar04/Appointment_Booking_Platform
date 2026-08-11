@@ -5,7 +5,7 @@ import Home from './pages/Home';
 import Booking from './pages/Booking';
 import Profile from './pages/Profile';
 import PaymentSuccess from './pages/PaymentSuccess';
-import PaymentCancel from './pages/PaymentCancel';
+import PaymentCancel from './pages/paymentCancel';
 import BookingModal from './components/BookingModal';
 import AuthModal from './components/AuthModal';
 import { API_BASE_URL } from './utils/api';
