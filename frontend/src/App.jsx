@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import Home from './pages/Home';
@@ -12,7 +12,7 @@ import { API_BASE_URL } from './utils/api';
 
 
 // Navigation wrapper to access location
-const NavigationWrapper = ({ showAuthModal, setShowAuthModal, user, onSignOut }) => {
+const NavigationWrapper = ({ setShowAuthModal, user, onSignOut }) => {
   const location = useLocation();
   const navigate = useNavigate();
   
@@ -162,7 +162,7 @@ const App = () => {
     }
   };
 
-  const fetchAppointments = async () => {
+  const fetchAppointments = useCallback(async () => {
     setIsLoading(true);
     setError('');
     
@@ -222,7 +222,7 @@ const App = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchAppointments();
@@ -312,7 +312,7 @@ const App = () => {
           });
       }
     }
-  }, []);
+  }, [fetchAppointments]);
 
   const handleBookNow = (service) => {
     setSelectedService(service);
@@ -385,7 +385,6 @@ const App = () => {
     <Router>
       <div className="min-h-screen bg-gray-50">
         <NavigationWrapper 
-          showAuthModal={showAuthModal}
           setShowAuthModal={setShowAuthModal}
           user={user}
           onSignOut={handleSignOut}

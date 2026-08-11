@@ -4,7 +4,22 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 
-dotenv.config();
+// Resolve dependencies from backend/frontend when root node_modules is absent
+[path.join(__dirname, 'backend', 'node_modules'), path.join(__dirname, 'frontend', 'node_modules')]
+  .forEach((modulesPath) => {
+    if (!module.paths.includes(modulesPath)) {
+      module.paths.unshift(modulesPath);
+    }
+  });
+
+// Always load .env from project root (works the same in Cursor, VS Code, and terminal)
+dotenv.config({ path: path.join(__dirname, '.env') });
+
+if (!process.env.STRIPE_SECRET_KEY) {
+  console.warn('STRIPE_SECRET_KEY not set in root .env — Stripe payments will be disabled');
+} else {
+  console.log('Stripe configured successfully');
+}
 
 const authRoutes = require('./backend/routes/authRoutes');
 const appointmentRoutes = require('./backend/routes/appointments');
@@ -47,7 +62,8 @@ async function startServer() {
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
-      root: path.join(__dirname, 'frontend')
+      root: path.join(__dirname, 'frontend'),
+      envDir: __dirname
     });
     app.use(vite.middlewares);
   } else {

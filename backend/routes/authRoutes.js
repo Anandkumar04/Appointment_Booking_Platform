@@ -4,8 +4,9 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const User = require('../models/User');
 
+const { inMemoryUsers } = require('../store/inMemoryStore');
+
 const router = express.Router();
-const inMemoryUsers = [];
 const JWT_SECRET = process.env.JWT_SECRET || 'default-jwt-secret-key-12345';
 
 // Register

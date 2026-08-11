@@ -13,7 +13,7 @@ const waitForRenderWakeup = async (url, maxRetries = 3) => {
         timeout: 30000 
       });
       if (response.ok) return true;
-    } catch (error) {
+    } catch {
       console.log(`Render wakeup attempt ${i + 1}/${maxRetries}...`);
       if (i < maxRetries - 1) {
         await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Calendar, Clock, User, Phone, Mail, MessageSquare, CreditCard, Lock } from 'lucide-react';
 import { API_BASE_URL } from '../utils/api';
 
-const BookingModal = ({ service, onClose, onBook, user, existingAppointments = [] }) => {
+const BookingModal = ({ service, onClose, user, existingAppointments = [] }) => {
   const [formData, setFormData] = useState({
     name: user?.name || 'Anandkumar04',
     email: user?.email || 'anandkumar04@example.com',
@@ -91,7 +91,7 @@ const BookingModal = ({ service, onClose, onBook, user, existingAppointments = [
       newErrors.email = 'Please enter a valid email address';
     }
     
-    const phoneRegex = /^[\+]?[\d\s\-\(\)]{10,}$/;
+    const phoneRegex = /^[+]?[\d\s\-()]{10,}$/;
     if (formData.phone && !phoneRegex.test(formData.phone)) {
       newErrors.phone = 'Please enter a valid phone number';
     }

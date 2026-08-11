@@ -4,9 +4,13 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "dev": "tsx server.js",
-    "build": "cd frontend && npm run build && cd .. && esbuild server.js --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
-    "start": "node dist/server.cjs"
+    "dev": "node server.js",
+    "build:frontend": "node scripts/build-frontend.js",
+    "build": "node scripts/build-frontend.js",
+    "start": "node server.js",
+    "start:prod": "node start-prod.js",
+    "install:all": "npm install --prefix backend && npm install --prefix frontend",
+    "lint": "npm run lint --prefix frontend"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",
@@ -21,6 +25,7 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.3",
+    "stripe": "^22.4.0",
     "tailwindcss": "^4.1.11"
   },
   "devDependencies": {

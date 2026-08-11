@@ -69,10 +69,12 @@ const AuthModal = ({ onClose, onSuccess }) => {
 
         if (response.ok) {
           const data = await response.json();
-          if (mode === 'login') {
+          const userData = data.user || { name: authForm.name || 'User', email: authForm.email };
+          if (mode === 'login' && data.token) {
             localStorage.setItem('token', data.token);
           }
-          onSuccess({ name: authForm.name || 'User', email: authForm.email });
+          localStorage.setItem('user', JSON.stringify(userData));
+          onSuccess(userData);
           return;
         }
       }

@@ -3,16 +3,7 @@ const router = express.Router();
 const Stripe = require('stripe');
 const mongoose = require('mongoose');
 const Appointment = require('../models/Appointment');
-let inMemoryAppointments = [];
-
-try {
-  const store = require('../store/inMemoryStore');
-  if (store && store.inMemoryAppointments) {
-    inMemoryAppointments = store.inMemoryAppointments;
-  }
-} catch (e) {
-  // Safe fallback if inMemoryStore.js is missing
-}
+const { inMemoryAppointments } = require('../store/inMemoryStore');
 
 function getStripe() {
   const secretKey = process.env.STRIPE_SECRET_KEY;
@@ -235,7 +226,7 @@ router.post('/create-checkout-session', async (req, res) => {
     const stripe = getStripe();
     if (!stripe) {
       return res.status(400).json({ 
-        error: 'Stripe secret key is missing. Please configure STRIPE_SECRET_KEY in backend .env file.' 
+        error: 'Stripe secret key is missing. Add STRIPE_SECRET_KEY to the .env file in the project root, then restart the server with: npm run dev'
       });
     }
 
